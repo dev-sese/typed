@@ -2,7 +2,7 @@ import Resource from "components/Resource";
 import { useAtom } from "jotai";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
-import { resourceAtom } from "store/resourceStore";
+import { currentToastAtom, resourceAtom } from "store/resourceStore";
 import {
   colors,
   TypedButton,
@@ -16,6 +16,7 @@ const URL_SCHEME_CONST = "https://";
 
 export const List = () => {
   const [resourceList, setResourceList] = useAtom(resourceAtom);
+  const [, setToast] = useAtom(currentToastAtom);
 
   const [modalState, setModalState] = useState(false);
 
@@ -52,15 +53,20 @@ export const List = () => {
     reader.readAsDataURL(imgFile);
     reader.addEventListener("load", () => {
       setTimeout(() => {
-        setResourceList([
-          {
-            id: uuidv4(),
-            type: "img",
-            url: typeof reader.result === "string" ? reader.result : "",
-            name: imgFile.name,
-          },
-          ...resourceList,
-        ]);
+        if (setRandomSuccess()) {
+          setResourceList([
+            {
+              id: uuidv4(),
+              type: "img",
+              url: typeof reader.result === "string" ? reader.result : "",
+              name: imgFile.name,
+            },
+            ...resourceList,
+          ]);
+          setToast("success", "등록에 성공했어요");
+        } else {
+          setToast("fail", "등록에 실패했어요");
+        }
       }, getRandomDelayTime());
     });
   };
@@ -125,6 +131,7 @@ const UrlModal: React.FC<{
 
   const [inputValue, setInputValue] = useState("");
   const [resourceList, setResourceList] = useAtom(resourceAtom);
+  const [, setToast] = useAtom(currentToastAtom);
 
   const inputFocusHandle = () => {
     if (inputRef.current !== null) {
@@ -140,15 +147,20 @@ const UrlModal: React.FC<{
     if (e.key === "Enter") {
       let inputUrl = replaceYoutubeUrl(URL_SCHEME_CONST + inputValue);
       setTimeout(() => {
-        setResourceList([
-          {
-            id: uuidv4(),
-            type: "url",
-            url: inputUrl,
-            name: inputUrl,
-          },
-          ...resourceList,
-        ]);
+        if (setRandomSuccess()) {
+          setResourceList([
+            {
+              id: uuidv4(),
+              type: "url",
+              url: inputUrl,
+              name: inputUrl,
+            },
+            ...resourceList,
+          ]);
+          setToast("success", "등록에 성공했어요");
+        } else {
+          setToast("fail", "등록에 실패했어요");
+        }
       }, getRandomDelayTime());
     }
   };
@@ -228,4 +240,14 @@ const getRandomDelayTime = (): number => {
   let min = 3;
   let max = 10;
   return (Math.floor(Math.random() * (max - min + 1)) + min) * 100;
+};
+
+const setRandomSuccess = (): boolean => {
+  let randomPercentage = Math.random();
+  let result = false;
+  if (randomPercentage < 0.8) {
+    return true;
+  }
+
+  return result;
 };
