@@ -14,12 +14,6 @@ export const resourceAtom = atom([
     url: "https://typed.blog/how-to-write-a-better-research-paper-faster/",
     name: "https://typed.blog/how-to-write-a-better-research-paper-faster/",
   },
-  {
-    id: uuidv4(),
-    type: "img",
-    url: "",
-    name: "킥킥나는url아닌데...",
-  },
 ]);
 
 export const viewerStateAtom = atom(false);

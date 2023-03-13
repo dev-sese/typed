@@ -1,6 +1,6 @@
 import Resource from "components/Resource";
 import { useAtom } from "jotai";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { resourceAtom } from "store/resourceStore";
 import {
@@ -12,6 +12,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 
 const ALLOW_FILE_EXTENSION = "png, jpg";
+const URL_SCHEME_CONST = "https://";
 
 export const List = () => {
   const [resourceList, setResourceList] = useAtom(resourceAtom);
@@ -120,8 +121,32 @@ const UrlModal: React.FC<{
 }> = ({ setModalState }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [inputValue, setInputValue] = useState("");
+  const [resourceList, setResourceList] = useAtom(resourceAtom);
+
   const inputFocusHandle = () => {
-    inputRef.current?.focus();
+    if (inputRef.current !== null) {
+      inputRef.current.focus();
+    }
+  };
+
+  const inputValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const enterPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      let inputUrl = replaceYoutubeUrl(URL_SCHEME_CONST + inputValue);
+      setResourceList([
+        {
+          id: uuidv4(),
+          type: "url",
+          url: inputUrl,
+          name: inputUrl,
+        },
+        ...resourceList,
+      ]);
+    }
   };
 
   const closeUrlModal = () => {
@@ -138,11 +163,20 @@ const UrlModal: React.FC<{
           border rounded-[3px] border-[##F7F7F7]`}
         onClick={inputFocusHandle}
       >
-        <input
-          ref={inputRef}
-          value={"https://"}
-          className="h-100 bg-[#F7F7F7] outline-0 text-xs"
-        />
+        <div className="flex">
+          <input
+            value={URL_SCHEME_CONST}
+            readOnly
+            className="w-10 h-100 bg-[#F7F7F7] outline-0 text-xs p-0"
+          />
+          <input
+            ref={inputRef}
+            value={inputValue}
+            onChange={inputValueHandler}
+            onKeyDown={enterPressHandler}
+            className="h-100 bg-[#F7F7F7] outline-0 text-xs p-0"
+          />
+        </div>
         <TypedIconButton
           onClick={closeUrlModal}
           size={25}
@@ -170,4 +204,18 @@ const removeFileName = (originalFileName: string): string => {
     return "";
   }
   return originalFileName.substring(lastIndex + 1).toLowerCase();
+};
+
+const replaceYoutubeUrl = (url: string): string => {
+  let returnUrl = url;
+  const re = /watch\?v=([\w-]+)/g;
+
+  if (url.includes("https://www.youtube.com")) {
+    const youtubeID = re.exec(url);
+    console.log(youtubeID);
+    returnUrl = `https://www.youtube.com/embed/${
+      youtubeID ? youtubeID[1] : ""
+    }`;
+  }
+  return returnUrl;
 };
