@@ -1,24 +1,93 @@
 import Resource from "components/Resource";
+import React, { useRef } from "react";
+import { useState } from "react";
+import {
+  colors,
+  TypedButton,
+  TypedButtonVariant,
+  TypedIcon,
+  TypedIconButton,
+} from "typed-design-system";
 
-const List = () => {
+export const List = () => {
+  const [modalState, setModalState] = useState(false);
+
+  const openUrlModal = () => {
+    setModalState(true);
+  };
+
   return (
-    <div style={{ width: "280px" }}>
-      <div style={{ width: " 100%", display: "flex", flexDirection: "column" }}>
+    <div className="w-[280px] min-h-screen bg-[#F7F7F7]">
+      <div className="w-full flex flex-col">
         <div
           id="button-area"
-          style={{ display: "flex", justifyContent: "center", gap: "8px" }}
+          className="h-[50px] flex justify-center gap-[10px] p-[10px] drop-shadow-[0_2px_5px_rgba(0,0,0,0.1)] bg-white"
         >
-          <button>URL 추가</button>
-          <button>이미지 추가</button>
+          <TypedButton
+            onClick={openUrlModal}
+            height={32}
+            variant={TypedButtonVariant.outlined}
+            backgroundColor={colors.gray90()}
+            fontColor={colors.gray0()}
+            className="w-[125px] !h-[30px] !text-xs"
+          >
+            URL 추가
+          </TypedButton>
+          <TypedButton
+            height={32}
+            variant={TypedButtonVariant.outlined}
+            backgroundColor={colors.gray90()}
+            fontColor={colors.gray0()}
+            className="w-[125px] !h-[30px]"
+          >
+            이미지 추가
+          </TypedButton>
         </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <Resource url={"url1"} />
-          <Resource url={"url2"} />
-          <Resource url={"url3"} />
+        {modalState && <UrlModal setModalState={setModalState} />}
+        <div className="flex flex-col p-[10px] gap-[10px]">
+          <Resource url={"url1"} disabled={true} />
+          <Resource url={"url2"} disabled={true} />
+          <Resource url={"url3"} disabled={false} />
         </div>
       </div>
     </div>
   );
 };
 
-export default List;
+const UrlModal: React.FC<{
+  setModalState: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ setModalState }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const inputFocusHandle = () => {
+    inputRef.current?.focus();
+  };
+
+  const closeUrlModal = () => {
+    setModalState(false);
+  };
+
+  return (
+    <div
+      className="absolute top-[42px] left-[10px] z-10 p-[5px] w-[260px] h-[40px] 
+        bg-white border rounded-[5px] border-[#E5E5E5] drop-shadow-[0_2px_5px_rgba(0,0,0,0.1)]"
+    >
+      <div
+        className={`w-full h-full bg-[#F7F7F7] p-2 flex justify-between gap-2
+          border rounded-[3px] border-[##F7F7F7]`}
+        onClick={inputFocusHandle}
+      >
+        <input
+          ref={inputRef}
+          className="h-100 bg-[#F7F7F7] outline-0 text-xs"
+        />
+        <TypedIconButton
+          onClick={closeUrlModal}
+          size={25}
+          icon="close_19"
+          className="!w-[12px] !h-[12px] object-contain"
+        />
+      </div>
+    </div>
+  );
+};

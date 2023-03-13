@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import Viewer from "components/Viewer";
-import "App.css";
-import List from "components/List";
+import { List } from "components/List";
 
 function App() {
   return (
-    <div className="App">
-      <div style={{ display: "flex" }}>
+    <div className="text-center">
+      <div className="flex">
         <List></List>
+        <div className="w-[1px] min-h-screen bg-[#C4C4C4]" />
         <Viewer></Viewer>
       </div>
     </div>
