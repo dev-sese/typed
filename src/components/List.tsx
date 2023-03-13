@@ -51,15 +51,17 @@ export const List = () => {
 
     reader.readAsDataURL(imgFile);
     reader.addEventListener("load", () => {
-      setResourceList([
-        {
-          id: uuidv4(),
-          type: "img",
-          url: typeof reader.result === "string" ? reader.result : "",
-          name: imgFile.name,
-        },
-        ...resourceList,
-      ]);
+      setTimeout(() => {
+        setResourceList([
+          {
+            id: uuidv4(),
+            type: "img",
+            url: typeof reader.result === "string" ? reader.result : "",
+            name: imgFile.name,
+          },
+          ...resourceList,
+        ]);
+      }, getRandomDelayTime());
     });
   };
 
@@ -137,15 +139,17 @@ const UrlModal: React.FC<{
   const enterPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       let inputUrl = replaceYoutubeUrl(URL_SCHEME_CONST + inputValue);
-      setResourceList([
-        {
-          id: uuidv4(),
-          type: "url",
-          url: inputUrl,
-          name: inputUrl,
-        },
-        ...resourceList,
-      ]);
+      setTimeout(() => {
+        setResourceList([
+          {
+            id: uuidv4(),
+            type: "url",
+            url: inputUrl,
+            name: inputUrl,
+          },
+          ...resourceList,
+        ]);
+      }, getRandomDelayTime());
     }
   };
 
@@ -218,4 +222,10 @@ const replaceYoutubeUrl = (url: string): string => {
     }`;
   }
   return returnUrl;
+};
+
+const getRandomDelayTime = (): number => {
+  let min = 3;
+  let max = 10;
+  return (Math.floor(Math.random() * (max - min + 1)) + min) * 100;
 };

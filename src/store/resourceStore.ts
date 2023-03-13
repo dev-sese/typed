@@ -38,3 +38,16 @@ export const currentViewAtom = atom(
     set(viewerStateAtom, true);
   }
 );
+
+export const toastAtom = atom<{
+  show: boolean;
+  type: undefined | string;
+  message: undefined | string;
+}>({ show: false, type: undefined, message: undefined });
+
+export const currentToastAtom = atom(
+  null,
+  async (_get, set, type: string, message: string) => {
+    set(toastAtom, { show: true, type: type, message: message });
+  }
+);
