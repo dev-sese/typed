@@ -4,3 +4,5 @@
 https://stackoverflow.com/questions/64825623/dependency-is-not-renamed
 
 UI 라이브러리로 tailwindcss를 추가하였습니다.
+global 상태관리 라이브러리로 jotai를 추가하였습니다.
+uuid 생성 라이브러리로 uuid를 추가하였습니다. (타입스크립트 사용으로 @types/uuid도 설치하였습니다.)

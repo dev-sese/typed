@@ -1,15 +1,18 @@
 import Resource from "components/Resource";
+import { useAtom } from "jotai";
 import React, { useRef } from "react";
 import { useState } from "react";
+import { resourceAtom } from "store/resourceStore";
 import {
   colors,
   TypedButton,
   TypedButtonVariant,
-  TypedIcon,
   TypedIconButton,
 } from "typed-design-system";
 
 export const List = () => {
+  const [resourceList] = useAtom(resourceAtom);
+
   const [modalState, setModalState] = useState(false);
 
   const openUrlModal = () => {
@@ -45,9 +48,9 @@ export const List = () => {
         </div>
         {modalState && <UrlModal setModalState={setModalState} />}
         <div className="flex flex-col p-[10px] gap-[10px]">
-          <Resource url={"url1"} disabled={true} />
-          <Resource url={"url2"} disabled={true} />
-          <Resource url={"url3"} disabled={false} />
+          {resourceList.map((resource) => (
+            <Resource key={resource.id} url={resource.url} disabled={true} />
+          ))}
         </div>
       </div>
     </div>
@@ -79,6 +82,7 @@ const UrlModal: React.FC<{
       >
         <input
           ref={inputRef}
+          value={"https://"}
           className="h-100 bg-[#F7F7F7] outline-0 text-xs"
         />
         <TypedIconButton
