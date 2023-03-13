@@ -49,7 +49,13 @@ export const List = () => {
         {modalState && <UrlModal setModalState={setModalState} />}
         <div className="flex flex-col p-[10px] gap-[10px]">
           {resourceList.map((resource) => (
-            <Resource key={resource.id} url={resource.url} disabled={true} />
+            <Resource
+              key={resource.id}
+              id={resource.id}
+              url={resource.url}
+              name={resource.name}
+              disabled={true}
+            />
           ))}
         </div>
       </div>
