@@ -3,10 +3,19 @@ import { List } from "components/List";
 import { useAtom } from "jotai";
 import { viewerStateAtom, toastAtom } from "store/resourceStore";
 import Toast from "components/Toast";
+import { useEffect } from "react";
 
 function App() {
   const [viewerState] = useAtom(viewerStateAtom);
-  const [toast] = useAtom(toastAtom);
+  const [toast, setToast] = useAtom(toastAtom);
+
+  useEffect(() => {
+    if (toast.show) {
+      setTimeout(() => {
+        setToast({ show: false, type: undefined, message: undefined });
+      }, 2500);
+    }
+  }, [toast.show]);
 
   return (
     <div className="flex  bg-[#F0F0F0]">

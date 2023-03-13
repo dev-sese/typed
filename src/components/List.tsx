@@ -175,11 +175,11 @@ const UrlModal: React.FC<{
         bg-white border rounded-[5px] border-[#E5E5E5] drop-shadow-[0_2px_5px_rgba(0,0,0,0.1)]"
     >
       <div
-        className={`w-full h-full bg-[#F7F7F7] p-2 flex justify-between gap-2
+        className={`w-full h-full bg-[#F7F7F7] flex justify-between gap-2
           border rounded-[3px] border-[##F7F7F7]`}
         onClick={inputFocusHandle}
       >
-        <div className="flex">
+        <div className="flex ml-2">
           <input
             value={URL_SCHEME_CONST}
             readOnly
@@ -190,15 +190,17 @@ const UrlModal: React.FC<{
             value={inputValue}
             onChange={inputValueHandler}
             onKeyDown={enterPressHandler}
-            className="h-100 bg-[#F7F7F7] outline-0 text-xs p-0"
+            className="h-full bg-[#F7F7F7] outline-0 text-xs p-0 m-0"
           />
         </div>
-        <TypedIconButton
-          onClick={closeUrlModal}
-          size={25}
-          icon="close_19"
-          className="!w-[12px] !h-[12px] object-contain"
-        />
+        <div className="flex justify-center items-center mr-2">
+          <TypedIconButton
+            onClick={closeUrlModal}
+            size={25}
+            icon="close_19"
+            className="!w-[12px] !h-[12px] object-contain"
+          />
+        </div>
       </div>
     </div>
   );
