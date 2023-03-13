@@ -8,19 +8,24 @@ export const Viewer = () => {
 
   const viewerRendererWithType = (
     type: undefined | string,
-    url: undefined | string
+    url: undefined | string,
+    name: undefined | string
   ) => {
     switch (type) {
       case "url":
         return <UrlViewer url={url} />;
       case "img":
-        return <ImgViewer url={url}></ImgViewer>;
+        return <ImgViewer url={url} name={name} />;
     }
   };
 
   return (
     <div className="w-[calc(100vw-280px)] min-h-screen z-[5]">
-      {viewerRendererWithType(currentResource.type, currentResource.url)}
+      {viewerRendererWithType(
+        currentResource.type,
+        currentResource.url,
+        currentResource.name
+      )}
     </div>
   );
 };
@@ -50,13 +55,14 @@ const UrlViewer: React.FC<{
 
 const ImgViewer: React.FC<{
   url: undefined | string;
-}> = ({ url }) => {
+  name: undefined | string;
+}> = ({ url, name }) => {
   const [, setViewerState] = useAtom(viewerStateAtom);
 
   return (
     <div className="w-full h-full flex flex-col">
       <div className="w-full h-[50px] p-[15px] flex justify-between bg-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.1)]">
-        <span className="text-sm">{url}</span>
+        <span className="text-sm">{name}</span>
         <TypedIconButton
           onClick={() => {
             setViewerState(false);
@@ -66,8 +72,8 @@ const ImgViewer: React.FC<{
           className="!w-[19px] !h-[19px] mt-[1px]"
         />
       </div>
-      <div className="bg-[white] min-h-[calc(100vh-50px)] p-2">
-        나는야 이미지뷰어
+      <div className="bg-[white] min-h-[calc(100vh-50px)] p-2 flex justify-center items-center">
+        <img src={url} className="min-w-[50%] max-w-[75%]"></img>
       </div>
     </div>
   );

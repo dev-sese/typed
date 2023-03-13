@@ -9,14 +9,57 @@ import {
   TypedButtonVariant,
   TypedIconButton,
 } from "typed-design-system";
+import { v4 as uuidv4 } from "uuid";
+
+const ALLOW_FILE_EXTENSION = "png, jpg";
 
 export const List = () => {
-  const [resourceList] = useAtom(resourceAtom);
+  const [resourceList, setResourceList] = useAtom(resourceAtom);
 
   const [modalState, setModalState] = useState(false);
 
   const openUrlModal = () => {
     setModalState(true);
+  };
+
+  const fileInput = useRef<HTMLInputElement>(null);
+
+  const fileUploadHandler = () => {
+    if (fileInput.current !== null) {
+      fileInput.current.click();
+    }
+  };
+
+  const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.currentTarget;
+    const imgFile = (target.files as FileList)[0];
+
+    if (imgFile === undefined) {
+      return;
+    }
+
+    if (!fileExtensionValid(imgFile)) {
+      target.value = "";
+      alert(
+        `업로드 가능한 확장자가 아닙니다. [가능한 확장자 : ${ALLOW_FILE_EXTENSION}]`
+      );
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(imgFile);
+    reader.addEventListener("load", () => {
+      setResourceList([
+        {
+          id: uuidv4(),
+          type: "img",
+          url: typeof reader.result === "string" ? reader.result : "",
+          name: imgFile.name,
+        },
+        ...resourceList,
+      ]);
+    });
   };
 
   return (
@@ -37,6 +80,7 @@ export const List = () => {
             URL 추가
           </TypedButton>
           <TypedButton
+            onClick={fileUploadHandler}
             height={32}
             variant={TypedButtonVariant.outlined}
             backgroundColor={colors.gray90()}
@@ -44,6 +88,13 @@ export const List = () => {
             className="w-[125px] !h-[30px]"
           >
             이미지 추가
+            <input
+              type={"file"}
+              ref={fileInput}
+              onChange={inputHandler}
+              id="imgUploader"
+              className="hidden"
+            />
           </TypedButton>
         </div>
         {modalState && <UrlModal setModalState={setModalState} />}
@@ -101,4 +152,22 @@ const UrlModal: React.FC<{
       </div>
     </div>
   );
+};
+
+const fileExtensionValid = ({ name }: { name: string }): boolean => {
+  const extension = removeFileName(name);
+
+  if (!(ALLOW_FILE_EXTENSION.indexOf(extension) > -1) || extension === "") {
+    return false;
+  }
+
+  return true;
+};
+
+const removeFileName = (originalFileName: string): string => {
+  const lastIndex = originalFileName.lastIndexOf(".");
+  if (lastIndex < 0) {
+    return "";
+  }
+  return originalFileName.substring(lastIndex + 1).toLowerCase();
 };
