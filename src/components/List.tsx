@@ -52,6 +52,7 @@ export const List = () => {
             <Resource
               key={resource.id}
               id={resource.id}
+              type={resource.type}
               url={resource.url}
               name={resource.name}
               disabled={true}

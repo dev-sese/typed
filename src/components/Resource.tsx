@@ -5,14 +5,15 @@ import { TypedIconButton } from "typed-design-system";
 
 const Resource: React.FC<{
   id: string;
+  type: string;
   url: string;
   name: string;
   disabled: boolean;
-}> = ({ id, url, name, disabled }) => {
+}> = ({ id, type, url, name, disabled }) => {
   const [, setCurrentView] = useAtom(currentViewAtom);
 
   const resourceClickHandle = () => {
-    setCurrentView(id, url, name);
+    setCurrentView(id, type, url, name);
   };
 
   return (

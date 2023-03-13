@@ -1,4 +1,4 @@
-import Viewer from "components/Viewer";
+import { Viewer } from "components/Viewer";
 import { List } from "components/List";
 import { useAtom } from "jotai";
 import { viewerStateAtom } from "store/resourceStore";
