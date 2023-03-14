@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     if (toast.show) {
       setTimeout(() => {
-        setToast({ show: false, type: undefined, message: undefined });
+        setToast({ show: !toast.show });
       }, 2500);
     }
   }, [toast.show]);

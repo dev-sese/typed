@@ -41,8 +41,8 @@ export const currentViewAtom = atom(
 
 export const toastAtom = atom<{
   show: boolean;
-  type: undefined | string;
-  message: undefined | string;
+  type?: undefined | string;
+  message?: undefined | string;
 }>({ show: false, type: undefined, message: undefined });
 
 export const currentToastAtom = atom(

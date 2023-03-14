@@ -30,6 +30,7 @@ export const Viewer = () => {
   );
 };
 
+// URL 리소스 뷰어
 const UrlViewer: React.FC<{
   url: undefined | string;
 }> = ({ url }) => {
@@ -48,11 +49,16 @@ const UrlViewer: React.FC<{
           className="!w-[19px] !h-[19px] mt-[1px]"
         />
       </div>
-      <iframe src={url} className="bg-[white] min-h-[calc(100vh-50px)] p-2" />
+      <iframe
+        src={url}
+        title={url}
+        className="bg-[white] min-h-[calc(100vh-50px)] p-2"
+      />
     </div>
   );
 };
 
+// Image 리소스 뷰어
 const ImgViewer: React.FC<{
   url: undefined | string;
   name: undefined | string;
@@ -73,7 +79,7 @@ const ImgViewer: React.FC<{
         />
       </div>
       <div className="bg-[white] min-h-[calc(100vh-50px)] p-2 flex justify-center items-center">
-        <img src={url} className="min-w-[50%] max-w-[75%]"></img>
+        <img src={url} alt={url} className="min-w-[50%] max-w-[75%]"></img>
       </div>
     </div>
   );

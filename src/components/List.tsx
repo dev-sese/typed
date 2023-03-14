@@ -32,7 +32,8 @@ export const List = () => {
     }
   };
 
-  const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // 이미지 업로드
+  const fileInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.currentTarget;
     const imgFileList = target.files as FileList;
 
@@ -109,7 +110,7 @@ export const List = () => {
                 type={"file"}
                 multiple
                 ref={fileInput}
-                onChange={inputHandler}
+                onChange={fileInputHandler}
                 id="imgUploader"
                 className="hidden"
               />
@@ -134,6 +135,7 @@ export const List = () => {
   );
 };
 
+// URL 모달
 const UrlModal: React.FC<{
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ setModalState }) => {
@@ -216,6 +218,7 @@ const UrlModal: React.FC<{
   );
 };
 
+// 이미지 파일 확장자 validation check
 const fileExtensionValid = (imgFileList: FileList): boolean => {
   let returnBoolean = true;
   for (let i = 0; i < imgFileList.length; i++) {
@@ -229,6 +232,7 @@ const fileExtensionValid = (imgFileList: FileList): boolean => {
   return returnBoolean;
 };
 
+// 이미지 파일 확장자 추출
 const removeFileName = (originalFileName: string): string => {
   const lastIndex = originalFileName.lastIndexOf(".");
   if (lastIndex < 0) {
@@ -237,6 +241,7 @@ const removeFileName = (originalFileName: string): string => {
   return originalFileName.substring(lastIndex + 1).toLowerCase();
 };
 
+// youtube URL 변환
 const replaceYoutubeUrl = (url: string): string => {
   let returnUrl = url;
   const re = /watch\?v=([\w-]+)/g;
@@ -251,12 +256,14 @@ const replaceYoutubeUrl = (url: string): string => {
   return returnUrl;
 };
 
+// 랜덤 딜레이 시간 설정
 const getRandomDelayTime = (): number => {
   let min = 3;
   let max = 10;
   return (Math.floor(Math.random() * (max - min + 1)) + min) * 100;
 };
 
+// 확률 설정
 const setRandomSuccess = (): boolean => {
   let randomPercentage = Math.random();
   let result = false;
