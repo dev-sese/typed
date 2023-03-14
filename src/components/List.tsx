@@ -1,6 +1,6 @@
 import Resource from "components/Resource";
 import { useAtom } from "jotai";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useState } from "react";
 import { currentToastAtom, resourceAtom } from "store/resourceStore";
 import {
@@ -34,13 +34,13 @@ export const List = () => {
 
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.currentTarget;
-    const imgFile = (target.files as FileList)[0];
+    const imgFileList = target.files as FileList;
 
-    if (imgFile === undefined) {
+    if (imgFileList === undefined) {
       return;
     }
 
-    if (!fileExtensionValid(imgFile)) {
+    if (!fileExtensionValid(imgFileList)) {
       target.value = "";
       alert(
         `업로드 가능한 확장자가 아닙니다. [가능한 확장자 : ${ALLOW_FILE_EXTENSION}]`
@@ -48,27 +48,34 @@ export const List = () => {
       return;
     }
 
-    const reader = new FileReader();
+    let imgResourceList: {
+      id: string;
+      type: string;
+      url: string;
+      name: string;
+    }[] = [];
 
-    reader.readAsDataURL(imgFile);
-    reader.addEventListener("load", () => {
-      setTimeout(() => {
-        if (setRandomSuccess()) {
-          setResourceList([
-            {
-              id: uuidv4(),
-              type: "img",
-              url: typeof reader.result === "string" ? reader.result : "",
-              name: imgFile.name,
-            },
-            ...resourceList,
-          ]);
-          setToast("success", "등록에 성공했어요");
-        } else {
-          setToast("fail", "등록에 실패했어요");
-        }
-      }, getRandomDelayTime());
-    });
+    for (let i = 0; i < imgFileList.length; i++) {
+      const reader = new FileReader();
+      reader.readAsDataURL(imgFileList[i]);
+      reader.addEventListener("load", () => {
+        imgResourceList.push({
+          id: uuidv4(),
+          type: "img",
+          url: typeof reader.result === "string" ? reader.result : "",
+          name: imgFileList[i].name,
+        });
+      });
+    }
+
+    setTimeout(() => {
+      if (setRandomSuccess()) {
+        setResourceList(imgResourceList.concat(resourceList));
+        setToast("success", "등록에 성공했어요");
+      } else {
+        setToast("fail", "등록에 실패했어요");
+      }
+    }, getRandomDelayTime());
   };
 
   return (
@@ -99,6 +106,7 @@ export const List = () => {
             이미지 추가
             <input
               type={"file"}
+              multiple
               ref={fileInput}
               onChange={inputHandler}
               id="imgUploader"
@@ -206,14 +214,17 @@ const UrlModal: React.FC<{
   );
 };
 
-const fileExtensionValid = ({ name }: { name: string }): boolean => {
-  const extension = removeFileName(name);
+const fileExtensionValid = (imgFileList: FileList): boolean => {
+  let returnBoolean = true;
+  for (let i = 0; i < imgFileList.length; i++) {
+    const extension = removeFileName(imgFileList[i].name);
 
-  if (!(ALLOW_FILE_EXTENSION.indexOf(extension) > -1) || extension === "") {
-    return false;
+    if (!(ALLOW_FILE_EXTENSION.indexOf(extension) > -1) || extension === "") {
+      returnBoolean = false;
+    }
   }
 
-  return true;
+  return returnBoolean;
 };
 
 const removeFileName = (originalFileName: string): string => {
