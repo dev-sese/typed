@@ -47,7 +47,7 @@ export const toastAtom = atom<{
 
 export const currentToastAtom = atom(
   null,
-  async (_get, set, type: string, message: string) => {
+  (_get, set, type: string, message: string) => {
     set(toastAtom, { show: true, type: type, message: message });
   }
 );

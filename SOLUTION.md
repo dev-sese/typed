@@ -1,8 +1,27 @@
 # SOLUTION
 
-@emotion/core 패키지에서 `The @emotion/core package has been renamed to @emotion/react. Please import it like this import { jsx } from '@emotion/react'` 에러가 발생하였습니다. 해당 패키지를 다운그레이드 하여 재설치 하는것으로 해결하였습니다.
-https://stackoverflow.com/questions/64825623/dependency-is-not-renamed
+Describes the solution
 
-UI 라이브러리로 tailwindcss를 추가하였습니다.
-global 상태관리 라이브러리로 jotai를 추가하였습니다.
-uuid 생성 라이브러리로 uuid를 추가하였습니다. (타입스크립트 사용으로 @types/uuid도 설치하였습니다.)
+## ✨ 1. 전체 구조
+
+전체적인 프로젝트의 구조는 다음과 같습니다.
+
+모든 리소스는 전역 상태로 관리됩니다. 리소스 데이터는 `id`, `type`, `url`, `name` key를 가지는 object의 Array입니다. 리소스는 `url` 과 `img`, 두 가지 `type` 을 가지고, 사용자가 선택한 리소스의 타입에 맞춰 URL 뷰어 또는 이미지 뷰어가 열리게 됩니다.
+
+뷰어는 `jotai` 라이브러리를 사용해 리소스A가 열려있는 상태에서 리소스B를 열면 뷰어를 닫고, 해당 리소스의 URL을 저장한 뒤, 다시 뷰어를 열도록하였습니다.
+
+리소스의 삭제는 `id` 값을 기준으로 배열에서 찾아 삭제합니다. 수정은 리소스의 `name` 값을 수정하게 하여, URL 리소스는 수정 후에도 뷰어에는 처음 등록한 URL이 보일 수 있도록 하였습니다.
+
+## ✨ 2. URL 리소스
+
+URL 리소스는 `type` 이 `url` 인 리소스로, `url` 값에 해당 URL 값을 저장합니다. 리소스 전역 상태는 반드시 보여야 하는 두 개의 URL을 기본 값으로 가지고 있습니다.
+
+기본적으로 `https://` 스키마가 포함되도록 구성하였습니다. 또한 youtube url은 embed url로 변경하기 위해 URL 리소스 등록 시 `replaceYoutubeUrl` 함수에서 URL 체크와 ID 추출 과정을 거쳐 등록되도록 하였습니다.
+
+## ✨ 3. 이미지 리소스
+
+이미지 리소스는 `type` 이 `img` 인 리소스로, `url` 값에 해당 이미지의 `base64` 값을 저장합니다. 별도의 라이브러리를 사용하지 않고 `<input>` 태그의 `file` 속성을 통해 구현하였습니다. 여러 파일이 등록되면, 이미지 파일의 확장자를 체크하는 `fileExtensionValid` 함수를 통해 validation을 체크합니다.
+
+## ✨ 4. 랜덤 확률/딜레이
+
+두 타입의 리소스를 등록할 때, 랜덤 확률을 갖도록 한 `setRandomSuccess` 함수가 실행되고 return으로 `true`를 받아야 등록이 이루어지도록 하였습니다. 등록시에도 `setTimeout` 함수를 통해 랜덤 딜레이가 일어나도록 하였습니다. 등록 과정이 일어나면 전역 상태의 `toast` 값에 실패 또는 성공 메시지와 `show = true` 값을 저장해 토스트 알림이 일어나도록 하였습니다.

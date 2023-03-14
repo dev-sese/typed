@@ -1,6 +1,6 @@
 import Resource from "components/Resource";
 import { useAtom } from "jotai";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { currentToastAtom, resourceAtom } from "store/resourceStore";
 import {
@@ -11,6 +11,7 @@ import {
 } from "typed-design-system";
 import { v4 as uuidv4 } from "uuid";
 
+//const
 const ALLOW_FILE_EXTENSION = "png, jpg";
 const URL_SCHEME_CONST = "https://";
 
@@ -139,15 +140,15 @@ export const List = () => {
 const UrlModal: React.FC<{
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ setModalState }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const modalInputRef = useRef<HTMLInputElement>(null);
 
   const [inputValue, setInputValue] = useState("");
   const [resourceList, setResourceList] = useAtom(resourceAtom);
   const [, setToast] = useAtom(currentToastAtom);
 
   const inputFocusHandle = () => {
-    if (inputRef.current !== null) {
-      inputRef.current.focus();
+    if (modalInputRef.current !== null) {
+      modalInputRef.current.focus();
     }
   };
 
@@ -198,7 +199,7 @@ const UrlModal: React.FC<{
             className="w-[41px] h-100 bg-[#F7F7F7] outline-0 text-xs p-0"
           />
           <input
-            ref={inputRef}
+            ref={modalInputRef}
             value={inputValue}
             onChange={inputValueHandler}
             onKeyDown={enterPressHandler}
