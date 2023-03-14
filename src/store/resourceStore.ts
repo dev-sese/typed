@@ -51,3 +51,24 @@ export const currentToastAtom = atom(
     set(toastAtom, { show: true, type: type, message: message });
   }
 );
+
+export const deleteResource = atom(null, (get, set, uuid: string) => {
+  set(resourceAtom, () => {
+    let resourceList = [...get(resourceAtom)];
+    resourceList = resourceList.filter((resource) => resource.id !== uuid);
+    return resourceList;
+  });
+});
+
+export const editResourceName = atom(
+  null,
+  (get, set, uuid: string, changedName: string) => {
+    const currentIndex = get(resourceAtom).findIndex(
+      (resource: { id: string; type: string; url: string; name: string }) =>
+        resource.id === uuid
+    );
+    const currentList = [...get(resourceAtom)];
+    currentList[currentIndex].name = changedName;
+    set(resourceAtom, currentList);
+  }
+);

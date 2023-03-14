@@ -183,7 +183,7 @@ const UrlModal: React.FC<{
           <input
             value={URL_SCHEME_CONST}
             readOnly
-            className="w-10 h-100 bg-[#F7F7F7] outline-0 text-xs p-0"
+            className="w-[41px] h-100 bg-[#F7F7F7] outline-0 text-xs p-0"
           />
           <input
             ref={inputRef}
