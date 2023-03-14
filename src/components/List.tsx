@@ -80,42 +80,44 @@ export const List = () => {
 
   return (
     <div className="w-[280px] min-h-screen bg-[#F7F7F7]">
-      <div className="w-full flex flex-col">
+      <div className="w-full max-h-screen flex flex-col  overflow-y-auto">
         <div
           id="button-area"
-          className="h-[50px] flex justify-center gap-[10px] p-[10px] drop-shadow-[0_2px_5px_rgba(0,0,0,0.1)] bg-white"
+          className="w-full h-[50px] sticky top-0 p-[10px] drop-shadow-[0_2px_5px_rgba(0,0,0,0.1)] bg-white "
         >
-          <TypedButton
-            onClick={openUrlModal}
-            height={32}
-            variant={TypedButtonVariant.outlined}
-            backgroundColor={colors.gray90()}
-            fontColor={colors.gray0()}
-            className="w-[125px] !h-[30px] !text-xs"
-          >
-            URL 추가
-          </TypedButton>
-          <TypedButton
-            onClick={fileUploadHandler}
-            height={32}
-            variant={TypedButtonVariant.outlined}
-            backgroundColor={colors.gray90()}
-            fontColor={colors.gray0()}
-            className="w-[125px] !h-[30px]"
-          >
-            이미지 추가
-            <input
-              type={"file"}
-              multiple
-              ref={fileInput}
-              onChange={inputHandler}
-              id="imgUploader"
-              className="hidden"
-            />
-          </TypedButton>
+          <div className="flex justify-center gap-[10px]">
+            <TypedButton
+              onClick={openUrlModal}
+              height={32}
+              variant={TypedButtonVariant.outlined}
+              backgroundColor={colors.gray90()}
+              fontColor={colors.gray0()}
+              className="w-[125px] !h-[30px] !text-xs"
+            >
+              URL 추가
+            </TypedButton>
+            <TypedButton
+              onClick={fileUploadHandler}
+              height={32}
+              variant={TypedButtonVariant.outlined}
+              backgroundColor={colors.gray90()}
+              fontColor={colors.gray0()}
+              className="w-[125px] !h-[30px]"
+            >
+              이미지 추가
+              <input
+                type={"file"}
+                multiple
+                ref={fileInput}
+                onChange={inputHandler}
+                id="imgUploader"
+                className="hidden"
+              />
+            </TypedButton>
+          </div>
         </div>
         {modalState && <UrlModal setModalState={setModalState} />}
-        <div className="flex flex-col p-[10px] gap-[10px]">
+        <div className="flex flex-col p-[10px] gap-[10px] overflow-y-auto">
           {resourceList.map((resource) => (
             <Resource
               key={resource.id}

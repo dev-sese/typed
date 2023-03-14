@@ -47,10 +47,12 @@ const Resource: React.FC<{
   }, [inputDisable]);
 
   return (
-    <div className="w-full h-[90px] p-3 flex flex-col justify-between bg-white rounded-[10px]">
+    <div className="w-full min-h-[90px] p-3 flex flex-col justify-between bg-white rounded-[10px]">
       <div onClick={resourceClickHandler} className="w-full cursor-pointer">
         {inputDisable ? (
-          <p>{name}</p>
+          <span className="!block max-w-full truncate line-clamp-2 text-sm leading-[16.5px] whitespace-pre-line">
+            {name}
+          </span>
         ) : (
           <input
             ref={inputRef}
@@ -58,7 +60,7 @@ const Resource: React.FC<{
             disabled={inputDisable}
             onChange={(e) => setInputValue(e.target.value)}
             onBlur={saveOnBlurHandler}
-            className="w-full bg-white focus:bg-[#F7F7F7] outline-[#38A5E1] px-2 cursor-pointer"
+            className="min-w-full bg-white focus:bg-[#F7F7F7] outline-[#38A5E1] px-2 cursor-pointer"
           />
         )}
       </div>
